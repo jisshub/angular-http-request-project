@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
+import { Post } from "./post.model";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,7 +9,7 @@ import { map } from "rxjs/operators";
 })
 export class AppComponent implements OnInit {
   title = 'angular-http-request-project'; 
-   loadedPosts = [];
+   loadedPosts: Post[]= [];
 
   constructor(private http: HttpClient) {}
 
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
        .pipe(map(data =>{
           // converting js object to array of objects.
           // first initialize an empty array
-          const postsArray: Array<Object> = [];
+          const postsArray: Post[] = [];
           // loop each object in data
           for (const key in data) {
             // push each item as new object to empty array
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit {
           return postsArray;
        }))
        .subscribe(posts => {
-         console.log(posts);
+         this.loadedPosts = posts;
          
        })
   }
