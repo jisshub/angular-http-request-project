@@ -10,7 +10,6 @@ import { Post } from "./post.model";
 export class AppComponent implements OnInit {
   title = 'angular-http-request-project'; 
    loadedPosts: Post[]= [];
-
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -35,6 +34,7 @@ export class AppComponent implements OnInit {
   }
   // create a private method
   private fetchPosts() {
+
        this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json")
        .pipe(map(data =>{
           // converting js object to array of objects.
