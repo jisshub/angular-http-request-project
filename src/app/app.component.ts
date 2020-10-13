@@ -9,11 +9,15 @@ import { PostService } from './post.service';
 })
 export class AppComponent implements OnInit {
   title = 'angular-http-request-project'; 
-   loadedPosts: Post[]= [];
+   loadedPosts: Object[]= [];
   constructor(private http: HttpClient, private postService: PostService) {}
 
   ngOnInit() {
-    this.postService.FetchPosts();
+    this.postService.FetchPosts().subscribe(posts => {
+      console.log(posts);
+      // assign posts to empty array loadedPosts
+      this.loadedPosts = posts;
+    });
   }
 
   onCreatePost(postData: Post) {
@@ -23,11 +27,16 @@ export class AppComponent implements OnInit {
   }
 
   onFetchPosts() {
-    // Send Http request
-    this.postService.FetchPosts();
+    this.postService.FetchPosts().subscribe(posts => {
+      console.log(posts);
+      this.loadedPosts = posts;
+    });
   }
 
   onClearPosts() {
-    // Send Http request
+    // subscribe here, clear the loadedPosts array
+    this.postService.DeletePosts().subscribe(() => {
+        this.loadedPosts= [];
+    })
   }
 }
