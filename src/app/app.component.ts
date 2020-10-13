@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
 import { Post } from "./post.model";
+import { PostService } from './post.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,45 +10,24 @@ import { Post } from "./post.model";
 export class AppComponent implements OnInit {
   title = 'angular-http-request-project'; 
    loadedPosts: Post[]= [];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private postService: PostService) {}
 
   ngOnInit() {
-    this.fetchPosts();
+    this.postService.FetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     // Send Http request
-    this.http.post("https://test-angular-fire-project.firebaseio.com/posts.json", postData)
-    .subscribe(responseData => {
-     console.log(responseData);            
-    })
+    // call CreateAndStorePost from PostService.
+    this.postService.CreateAndStorePost(postData);
   }
 
   onFetchPosts() {
     // Send Http request
-    this.fetchPosts();
+    this.postService.FetchPosts();
   }
 
   onClearPosts() {
     // Send Http request
-  }
-  // create a private method
-  private fetchPosts() {
-
-       this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json")
-       .pipe(map(data =>{
-          // converting js object to array of objects.
-          // first initialize an empty array
-          const postsArray: Post[] = [];
-          // loop each object in data
-          for (const key in data) {
-            // push each item as new object to empty array
-            postsArray.push({...data[key], id: key})
-          }          
-          return postsArray;
-       }))
-       .subscribe(posts => {
-         this.loadedPosts = posts;   
-       });
   }
 }
