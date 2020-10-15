@@ -48,6 +48,9 @@ export class AppComponent implements OnInit, OnDestroy {
         this.loadedPosts= [];
     })
   }
+  onClearAlert(){
+    this.error = null;
+  }
   ngOnDestroy(){
     // unsubscribe 
     this.errSub.unsubscribe();

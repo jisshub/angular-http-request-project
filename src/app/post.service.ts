@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { error } from 'protractor';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Post } from './post.model';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,9 @@ export class PostService {
   constructor(private http: HttpClient) { }
 
   CreateAndStorePost(postData: Post){
-    this.http.post("https://test-angular-fire-project.firebaseio.com/posts.json", postData)
+    this.http.post("https://test-angular-fire-project.firebaseio.com/posts.json", postData, {
+      headers: new HttpHeaders({"Custom-Header": "Hello"})
+    })
     .subscribe(responseData => {
        console.log(responseData);
     }, error => {
@@ -23,13 +24,16 @@ export class PostService {
     })
   }
   FetchPosts(){
-    return this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json")
+    return this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json", {headers: new HttpHeaders({"Custom-Header": "Hello"})})
     .pipe(map(data => {
         const dataArray: Array<Object> = [];
         for (const key in data) {
           dataArray.push({...data[key], id: key})
         }
         return dataArray;
+    }),
+    catchError(errRes => {
+      return throwError(errRes);
     }));
   }
   // delete posts
