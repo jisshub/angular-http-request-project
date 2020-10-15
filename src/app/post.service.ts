@@ -15,7 +15,7 @@ export class PostService {
 
   CreateAndStorePost(postData: Post){
     this.http.post("https://test-angular-fire-project.firebaseio.com/posts.json", postData, {
-      headers: new HttpHeaders({"Custom-Header": "Hello"})
+      observe: "response"
     })
     .subscribe(responseData => {
        console.log(responseData);
@@ -46,6 +46,9 @@ export class PostService {
   }
   // delete posts
   DeletePosts(){
-    return this.http.delete("https://test-angular-fire-project.firebaseio.com/posts.json")
+    return this.http.delete("https://test-angular-fire-project.firebaseio.com/posts.json",
+    {
+      observe: "events"
+    });
   }
 }
