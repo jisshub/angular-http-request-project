@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map } from 'rxjs/operators';
 import { Post } from './post.model';
@@ -24,7 +24,15 @@ export class PostService {
     })
   }
   FetchPosts(){
-    return this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json", {headers: new HttpHeaders({"Custom-Header": "Hello"})})
+    // create an object for HttpParams
+    let searchParams = new HttpParams();
+    // append params to that object.
+    searchParams = searchParams.append("print", "pretty");
+    // can append multiple params as well
+    searchParams = searchParams.append("custom", "key");
+    return this.http.get("https://test-angular-fire-project.firebaseio.com/posts.json", {headers: new HttpHeaders({"Custom-Header": "Hello"}), 
+      params: searchParams}  
+     )
     .pipe(map(data => {
         const dataArray: Array<Object> = [];
         for (const key in data) {
